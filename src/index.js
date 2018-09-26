@@ -1,8 +1,4 @@
 module.exports = function getZerosCount(number, base) {
-/* it's not working well for the time being. The necessary answers
-appear in the process of calculation in different places. And I
-have not idea why in 17 cases out of 100 the answer is in
-another values of expression. */
  	var zeros = 0;
   var prime = [];
   var sortFactors = [];
@@ -25,29 +21,33 @@ another values of expression. */
       }
     }
   }
-//count the factors of number for each prime
-  for (var i = 0; i < prime.length; i++) {
-  var currentPrime = prime[i];
-  var sumNumberFactors = 0;
-  var sumBaseFactors = 0;
-      for (var j = 1; Math.pow(currentPrime, j) <= number; j++) {
-      sumNumberFactors += parseInt(number/Math.pow(currentPrime, j));
+//main cycle
+  for (var j = 0; j < prime.length; j++) {
+    var currentPrime = prime[j];
+    var sumNumberFactors = 0;
+    var sumBaseFactors = 0;
+    var primePow = 1;
+    var tnum = number;
+    var tbas = base;
+//count the pow of number for each prime
+    for (var i = 1; tnum != 0; i++) {
+      primePow *= currentPrime;
+      tnum = Math.floor(number / primePow);
+      sumNumberFactors += tnum;
     }
-    for (var k = 1; Math.pow(currentPrime, k) <= base; k++) {
+//count number of each prime in base
+    while(tbas % currentPrime == 0) {
+      tbas = Math.floor(tbas / currentPrime);
       sumBaseFactors++;
     }
-    if (sumBaseFactors == 1) {
-      sortFactors.push(sumNumberFactors);
-    } else {
-      sortFactors.push(Math.floor(sumNumberFactors/sumBaseFactors));
-    }
-}
-//looking smallest
-var zeros = sortFactors[0];
-for (var i = 0; i < sortFactors.length; i++) {
-  if (zeros > sortFactors[i]) {
-    zeros = sortFactors[i];
+    sortFactors.push(Math.floor(sumNumberFactors/sumBaseFactors));
   }
-}
+//looking smallest
+  var zeros = sortFactors[0];
+  for (var i = 0; i < sortFactors.length; i++) {
+    if (zeros > sortFactors[i]) {
+      zeros = sortFactors[i];
+    }
+  }
 	return zeros;
 }
